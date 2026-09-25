@@ -99,3 +99,7 @@ Audio playback can continue using browser text-to-speech. Gemini is used for tex
 
 ## Current Gemini integration
 The Worker uses Google Gemini 3.8 Flash through the Interactions API. The API key remains a Cloudflare secret named `GEMINI_API_KEY`; never commit it to GitHub.
+
+
+## GitHub Pages
+This package is prepared for publishing from `main / (root)`. `index.html` is at repository root and `.nojekyll` is included.
