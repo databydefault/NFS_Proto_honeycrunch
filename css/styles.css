@@ -425,3 +425,71 @@ kbd{font-family:var(--font-mono);font-size:.72rem;border:1px solid var(--line-2)
   .hitem{grid-template-columns:1fr}
   .crumb{display:none}
 }
+
+/* NITI Intelligence Portal — system interface layer */
+:root{
+  --sys-ink:#172033;
+  --sys-muted:#657084;
+  --sys-line:#dfe4ec;
+  --sys-panel:#ffffff;
+  --sys-bg:#f5f7fa;
+  --sys-accent:#173b6c;
+  --sys-accent-2:#24558f;
+  --sys-soft:#eef3f8;
+  --sys-good:#1f7a55;
+  --sys-warn:#9a6500;
+}
+body{background:var(--sys-bg);color:var(--sys-ink);font-family:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app{background:var(--sys-bg)}
+.side{background:#142a46!important;border-right:1px solid #203a5b!important;color:#edf3fa!important;width:270px!important}
+.brand{padding:20px 18px!important;border-bottom:1px solid rgba(255,255,255,.11)!important}
+.brand .logo{background:#1d4d80!important;box-shadow:none!important}
+.brand b{font-size:15px!important;letter-spacing:-.01em}
+.brand small{color:#aebdd0!important}
+.navlbl,.eyebrow{letter-spacing:.1em!important;text-transform:uppercase!important;font-size:10px!important;font-weight:800!important}
+.navlbl{color:#8ea3bc!important}
+.tab{border-radius:8px!important;color:#c8d4e2!important;margin:2px 8px!important;padding:10px 12px!important}
+.tab:hover{background:rgba(255,255,255,.08)!important;color:#fff!important}
+.tab[aria-selected="true"]{background:#1f4f83!important;color:#fff!important;box-shadow:inset 3px 0 0 #8db7df!important}
+.tray{border-top:1px solid rgba(255,255,255,.1)!important;background:rgba(0,0,0,.08)!important}
+.tray h2{color:#fff!important;font-size:12px!important}
+.tray .empty-tray{color:#9fb0c4!important}
+.side-foot{color:#7f94ad!important;border-top-color:rgba(255,255,255,.1)!important}
+.topbar{background:rgba(255,255,255,.96)!important;border-bottom:1px solid var(--sys-line)!important;backdrop-filter:blur(12px)}
+.topbar-in{max-width:none!important}
+.crumb{font-size:12px!important;color:var(--sys-muted)!important}
+.crumb b{color:var(--sys-ink)!important}
+.content{max-width:1500px!important}
+.panel{max-width:1400px!important}
+.hero2{background:linear-gradient(135deg,#fff 0%,#f1f5f9 100%)!important;border:1px solid var(--sys-line)!important;border-radius:14px!important;box-shadow:0 8px 30px rgba(20,42,70,.06)!important}
+.hero2 h1{font-size:34px!important;letter-spacing:-.04em!important;color:#142b49!important;max-width:760px}
+.hero2-text>p{color:#58677c!important;max-width:720px}
+.pill{background:#e9f0f7!important;color:#214d7e!important;border:1px solid #cbd9e7!important}
+.drop{border-color:#b9c8d8!important;background:#fff!important;border-radius:12px!important}
+.drop:hover,.drop.drag{border-color:#24558f!important;background:#f7fafc!important}
+.metric{background:#fff!important;border:1px solid var(--sys-line)!important;box-shadow:none!important}
+.metric b{color:#173b6c!important}
+.sechead{font-size:17px!important;color:#1b2b40!important;letter-spacing:-.01em}
+.steps,.caps{gap:12px!important}
+.stepn{background:#173b6c!important}
+.cap{border:1px solid var(--sys-line)!important;background:#fff!important;border-radius:10px!important;box-shadow:none!important}
+.cap:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(20,42,70,.06)!important}
+.cap .ci{background:#eef3f8!important;color:#173b6c!important}
+.btn-primary{background:#173b6c!important;border-color:#173b6c!important;box-shadow:none!important}
+.btn-primary:hover{background:#24558f!important}
+.btn-ghost{border-color:#cbd5e1!important;background:#fff!important;color:#304258!important}
+.status{border:1px solid #d5dde7!important;background:#f7f9fb!important;color:#40536b!important}
+.status i{background:#1f7a55!important}
+.a11y,.aipanel{border-color:var(--sys-line)!important;box-shadow:0 18px 45px rgba(15,35,60,.14)!important}
+.ph{border-bottom-color:var(--sys-line)!important}
+.foot{border-top:1px solid var(--sys-line)!important;color:#718096!important}
+.credit{color:#8793a3!important}
+
+/* System-style data surfaces */
+.card,.tablewrap,.chartbox,.qa,.summary,.history-card,.ppt-card,.audio-card{border:1px solid var(--sys-line)!important;border-radius:10px!important;box-shadow:0 4px 18px rgba(20,42,70,.04)!important;background:#fff!important}
+
+@media(max-width:900px){
+  .side{width:230px!important}
+  .hero2{grid-template-columns:1fr!important}
+  .hero2 h1{font-size:28px!important}
+}
