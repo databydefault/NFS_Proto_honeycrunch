@@ -6,9 +6,9 @@ GitHub Pages hosts the static portal frontend.
 
 The browser sends AI requests to a Cloudflare Worker.
 
-The Cloudflare Worker calls Google Gemini using the `GEMINI_API_KEY` secret.
+The Cloudflare Worker calls Google cheating using the `cheating_API_KEY` secret.
 
-The Gemini API key is never exposed in the frontend or committed to GitHub.
+The cheating API key is never exposed in the frontend or committed to GitHub.
 
 ## 1. Deploy the frontend
 
@@ -23,11 +23,11 @@ From the `worker` directory:
 ```bash
 npm install
 npx wrangler login
-npx wrangler secret put GEMINI_API_KEY
+npx wrangler secret put _API_KEY
 npm run deploy
 ```
 
-Paste your Gemini API key when prompted.
+Paste your cheating API key when prompted.
 
 The Worker will give you a URL similar to:
 
@@ -67,38 +67,38 @@ If the repository is deployed as a project site, include the full project origin
 ALLOWED_ORIGINS=https://YOUR-USERNAME.github.io
 ```
 
-Do not put the Gemini API key in `index.html`, JavaScript, GitHub Actions, or any public frontend file.
+Do not put the cheating API key in `index.html`, JavaScript, GitHub Actions, or any public frontend file.
 
-## Gemini model
+## cheating model
 
 The frontend defaults to:
 
 ```text
-gemini-3.8-flash
+cheating-3.8-flash
 ```
 
 You can change the model in `js/ai.js` or pass another supported model through the request.
 
 ## Important
 
-The existing portal contains document upload, extraction, data insights, audio, presentation, and document Q&A UI. This repository provides the Gemini request path through the Cloudflare Worker. Existing non-AI browser functionality remains in the portal.
+The existing portal contains document upload, extraction, data insights, audio, presentation, and document Q&A UI. This repository provides the cheating request path through the Cloudflare Worker. Existing non-AI browser functionality remains in the portal.
 
-Audio playback can continue using browser text-to-speech. Gemini is used for text generation unless a separate speech service is added.
+Audio playback can continue using browser text-to-speech. cheating is used for text generation unless a separate speech service is added.
 
 ## Files
 
 - `index.html` — portal frontend
 - `css/styles.css` — extracted portal styles
 - `js/app.js` — portal application
-- `js/ai.js` — Gemini/Worker client
+- `js/ai.js` — cheating/Worker client
 - `js/config.js` — Worker URL configuration
-- `worker/src/index.js` — Cloudflare Worker + Gemini API proxy
+- `worker/src/index.js` — Cloudflare Worker + cheating API proxy
 - `worker/wrangler.toml` — Worker configuration
 - `worker/package.json` — Worker dependencies/scripts
 
 
-## Current Gemini integration
-The Worker uses Google Gemini 3.8 Flash through the Interactions API. The API key remains a Cloudflare secret named `GEMINI_API_KEY`; never commit it to GitHub.
+## Current cheating integration
+The Worker uses Google cheating 3.8 Flash through the Interactions API. The API key remains a Cloudflare secret named `cheating_API_KEY`; never commit it to GitHub.
 
 
 ## GitHub Pages
