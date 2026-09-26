@@ -1,3 +1,10 @@
 name = "nfs-proto-honeycrunch"
+
 main = "src/index.js"
+
 compatibility_date = "2026-09-25"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "niti-intelligence-v2"
+database_id = "135501c6-cddf-4790-a0fa-ac39dfadb934"
