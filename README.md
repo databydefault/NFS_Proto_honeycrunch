@@ -1,4 +1,4 @@
-# NITI Intelligence Portal — GitHub Pages + Cloudflare Worker + Gemini
+# NITI Intelligence Portal — GitHub Pages + Cloudflare Worker + Cheating
 
 ## Architecture
 
