@@ -477,15 +477,10 @@ async function handleMe(request, env, headers) {
 }
 
 async function handleAsk(request, env, headers) {
+  // The current GitHub Pages frontend does not expose the login UI yet.
+  // Keep document analysis available while retaining the authenticated
+  // endpoints for the later access-control rollout.
   const session = await getSession(request, env);
-
-  if (!session) {
-    return json(
-      { error: "Authentication required." },
-      401,
-      headers
-    );
-  }
 
   if (!env.GEMINI_API_KEY) {
     return json(
@@ -585,13 +580,14 @@ async function handleAsk(request, env, headers) {
     session.id,
     "analysis_request",
     "ai",
-    {
-      model,
-      prompt_length: prompt.length
-    }
-  );
+      {
+        model,
+        prompt_length: prompt.length
+      }
+    );
+  }
 
-  return json(
+  return json
     {
       answer,
       model: data?.model || model,
