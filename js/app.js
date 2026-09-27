@@ -26,16 +26,16 @@ const I18N={
  }
 };
 const MSG={
- en:{aiOn:"AI assist on",aiOff:"Basic mode",aiCheck:"Checking",reading:"Reading",ready:"Ready",error:"Error",pages:"pages",sheets:"sheets",
+ en:{aiOn:"Analysis ready",aiOff:"Basic mode",aiCheck:"Checking",reading:"Reading",ready:"Ready",error:"Error",pages:"pages",sheets:"sheets",
   noDocs:"Add documents first.",sumEmpty:"No summary yet",sumEmptyP:"Upload documents and choose Generate summary.",
   pptEmpty:"No presentation yet",pptEmptyP:"Upload documents, then build the deck here.",dataEmpty:"No data yet",dataEmptyP:"Upload an Excel, CSV, PDF or Word file to see KPI tiles and charts.",
   audEmpty:"Nothing to read yet",histEmpty:"No history yet",histEmptyP:"Summaries you generate are kept here in this browser.",
   stale:"Documents changed since this summary was made.",thinking:"Reading the documents and drafting…",copied:"Copied",saved:"Download started",
-  basic:"This summary was made in basic mode (AI off), so it is extracted from the text rather than written. Open “AI off · why?” at the top of the page to turn on AI for a proper summary.",
-  askOff:"Questions need AI, which is not available in this view.",hiOff:"Hindi reading needs AI translation, which is not available in this view.",
+  basic:"This summary was made in basic mode (analysis service unavailable), so it is extracted from the text rather than written. Open “Analysis unavailable” at the top of the page to turn on AI for a proper summary.",
+  askOff:"Questions need the analysis service, which is not available in this view.",hiOff:"Hindi reading needs the analysis service for translation, which is not available in this view.",
   noHiVoice:"No Hindi voice is installed on this device, so Hindi text may be read with a default voice. On Windows, add Hindi under Settings › Time & language › Speech. Chrome's online Google हिन्दी voice also works.",
   translating:"Translating the next section into Hindi…"},
- hi:{aiOn:"AI सहायता चालू",aiOff:"बेसिक मोड",aiCheck:"जाँच जारी",reading:"पढ़ रहा है",ready:"तैयार",error:"त्रुटि",pages:"पृष्ठ",sheets:"शीट",
+ hi:{aiOn:"विश्लेषण तैयार",aiOff:"बेसिक मोड",aiCheck:"जाँच जारी",reading:"पढ़ रहा है",ready:"तैयार",error:"त्रुटि",pages:"पृष्ठ",sheets:"शीट",
   noDocs:"पहले दस्तावेज़ जोड़ें।",sumEmpty:"अभी कोई सारांश नहीं",sumEmptyP:"दस्तावेज़ अपलोड करें और 'सारांश बनाएँ' चुनें।",
   pptEmpty:"अभी कोई प्रस्तुति नहीं",pptEmptyP:"पहले सारांश बनाएँ, फिर यहाँ डेक तैयार करें।",dataEmpty:"कोई वर्कबुक लोड नहीं",dataEmptyP:"KPI टाइल और चार्ट देखने के लिए Excel या CSV फ़ाइल अपलोड करें।",
   audEmpty:"पढ़ने के लिए अभी कुछ नहीं",histEmpty:"अभी कोई इतिहास नहीं",histEmptyP:"आपके बनाए सारांश इस ब्राउज़र में यहाँ रखे जाते हैं।",
@@ -102,7 +102,7 @@ async function geminiCall(input, options={}){
     prompt=input.map(t=>`${String(t.role||"user").toUpperCase()}: ${String(t.content||"")}`).join("\n\n");
   }
   const answer=await window.NITI_AI.ask(prompt,"",{
-    model:options.model||"gemini-3.8-flash",
+    model:options.model||"analysis-service",
     thinking_level:options.thinking_level||"low"
   });
   return {text:String(answer||"")};
@@ -123,7 +123,7 @@ let aiChecked=false;
 function renderAiChip(){
   const c=$("#aiChip"),t=$("#aiChipTxt");
   if(!aiChecked){t.textContent=m("aiCheck");c.classList.add("off");return}
-  c.classList.toggle("off",!sample); t.textContent=sample?m("aiOn"):(LANG==="hi"?"AI बंद · क्यों?":"AI off · why?");
+  c.classList.toggle("off",!sample); t.textContent=sample?m("aiOn"):(LANG==="hi"?"विश्लेषण अनुपलब्ध":"Analysis unavailable");
   const hb=$("#homeAiBanner"); if(hb)hb.hidden=!!sample;
 }
 function aiReason(){
@@ -135,10 +135,10 @@ function renderAiPanel(){
   p.innerHTML=`<h4>${esc(r.title)}</h4><p>${esc(r.body)}</p>${r.steps.length?`<ol>${r.steps.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`:""}
    <div class="row"><button type="button" class="btn btn-ghost btn-sm" id="aiRecheck">Check again</button>${sample?`<button type="button" class="btn btn-ghost btn-sm" id="aiTest">Test AI</button>`:""}</div>
    ${AI.test?`<p style="color:var(--ink)">${esc(AI.test)}</p>`:""}
-   <dl class="diag"><dt>Analysis service</dt><dd>${sample?"connected":"not connected"}</dd><dt>Analysis capability</dt><dd>${sample?"available":"not available"}</dd><dt>Service</dt><dd>gemini-3.8-flash</dd><dt>Last AI error</dt><dd>${esc(AI.lastErr||"none")}</dd><dt>Checked</dt><dd>${AI.checkedAt?AI.checkedAt.toLocaleTimeString("en-IN"):"—"}</dd></dl>`;
+   <dl class="diag"><dt>Analysis service</dt><dd>${sample?"connected":"not connected"}</dd><dt>Analysis capability</dt><dd>${sample?"available":"not available"}</dd><dt>Service</dt><dd>analysis-service</dd><dt>Last AI error</dt><dd>${esc(AI.lastErr||"none")}</dd><dt>Checked</dt><dd>${AI.checkedAt?AI.checkedAt.toLocaleTimeString("en-IN"):"—"}</dd></dl>`;
   $("#aiRecheck").onclick=async()=>{AI.test="";try{await initCaps();AI.test=sample?"Analysis service is connected.":"Analysis service is not available."}catch(e){AI.test="Connection check failed."}renderAiPanel()};
-  const te=$("#aiTest"); if(te)te.onclick=async()=>{te.disabled=true;AI.test="Running analysis…";renderAiPanel();
-    try{const r_=await geminiCall("Reply with exactly: AI assist is working.");AI.test="Test passed: "+r_.text.trim().slice(0,80);AI.lastErr=""}catch(e){AI.lastErr=e&&e.code||"error";AI.test="Test failed: "+(e&&e.message||"unknown") ;}
+  const te=$("#aiTest"); if(te)te.onclick=async()=>{te.disabled=true;AI.test="Running service check…";renderAiPanel();
+    try{const r_=await geminiCall("Reply with exactly: Analysis service is working.");AI.test="Service check passed: "+r_.text.trim().slice(0,80);AI.lastErr=""}catch(e){AI.lastErr=e&&e.code||"error";AI.test="Service check failed: "+(e&&e.message||"unknown") ;}
     renderAiChip();renderAiPanel()};
 }
 function toggleAiPanel(open){const p=$("#aiPanel"),b=$("#aiChip");const o=open??p.hidden;p.hidden=!o;b.setAttribute("aria-expanded",o);if(o)renderAiPanel()}
@@ -149,9 +149,9 @@ document.addEventListener("click",e=>{const p=$("#aiPanel");if(p&&!p.hidden&&!e.
 function aiErr(e){
   const c=e&&e.code; if(c)AI.lastErr=c;
   if(c==="prompt_too_large")return "The documents are too long to send in one request. Remove a file and try again.";
-  if(c==="invalid_json")return "The AI reply could not be read. Try again.";
+  if(c==="invalid_json")return "The analysis response could not be read. Try again.";
   if(c==="cancelled")return "Stopped.";
-  return e&&e.message?String(e.message):"The AI service did not respond. Try again in a moment.";
+  return e&&e.message?String(e.message):"The analysis service did not respond. Try again in a moment.";
 }
 
 /* ================= file ingestion ================= */
@@ -307,7 +307,7 @@ async function runOcr(docs){
       }catch(e){d.note=aiErr(e);break}
     }
     d.text=d.pageTexts.map(x=>x.t).join("\n\n"); d.ocrDone=true;
-    d.note=`${pages.length} scanned page(s) read with AI`;
+    d.note=`${pages.length} scanned page(s) read with the analysis service`;
     renderTray();
   }
 }
@@ -498,7 +498,7 @@ function basicSummary(docs,big){
   const seen=new Set();
   const keyNums=numbers.sort((a,b)=>(b.score||0)-(a.score||0)).filter(n=>{const k=n.value+n.label.slice(0,20);if(seen.has(k))return false;seen.add(k);return true}).slice(0,big?8:6).map(({value,label,context})=>({value,label,context}));
   const acts=actions.sort((a,b)=>b.score-a.score).slice(0,big?10:7).map(({action,owner,due})=>({action,owner,due}));
-  return {title:title||(docs.length===1?docs[0].name.replace(/\.[^.]+$/,""):`${docs.length} documents`),doc_date:docDate,doc_type:(kind||"Document")+" · basic extraction (AI off)",overview,sections:outSecs,key_numbers:keyNums,action_items:acts};
+  return {title:title||(docs.length===1?docs[0].name.replace(/\.[^.]+$/,""):`${docs.length} documents`),doc_date:docDate,doc_type:(kind||"Document")+" · basic extraction (analysis service unavailable)",overview,sections:outSecs,key_numbers:keyNums,action_items:acts};
 }
 function summaryWords(s){return wordCount([s.title,s.overview,...s.sections.flatMap(x=>[x.heading,x.narrative||"",...x.points]),...s.key_numbers.map(k=>k.value+" "+k.label+" "+k.context),...s.action_items.map(a=>a.action+a.owner+a.due)].join(" "))}
 function renderSummary(){
@@ -902,7 +902,7 @@ function renderData(){
   if(textDocs.length){
     const F=S.fig;
     html+=`<div class="eyeline"><h3>Figures found in ${textDocs.length===1?esc(textDocs[0].name):textDocs.length+" documents"}</h3>${sample&&F&&!F.busy?`<button class="btn btn-ghost btn-sm" id="figRefresh">Extract again</button>`:""}</div>`;
-    if(!sample){html+=notice("Charts from PDF and Word files need AI, which is not available in this view. Upload an Excel or CSV file to chart data directly.")}
+    if(!sample){html+=notice("Charts from PDF and Word files need the analysis service, which is not available in this view. Upload an Excel or CSV file to chart data directly.")}
     else if(!F||F.busy||F.key!==docKey()){html+=`<div class="card empty"><span class="spin" style="width:26px;height:26px;color:var(--brand)"></span><b>Finding tables and figures in the documents…</b><span>This takes about half a minute.</span></div>`}
     else if(F.error){html+=notice(F.error,"warn")}
     else{
