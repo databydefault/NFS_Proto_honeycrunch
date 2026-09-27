@@ -575,11 +575,12 @@ async function handleAsk(request, env, headers) {
     );
   }
 
-  await writeActivity(
-    env,
-    session.id,
-    "analysis_request",
-    "ai",
+  if (session) {
+    await writeActivity(
+      env,
+      session.id,
+      "analysis_request",
+      "ai",
       {
         model,
         prompt_length: prompt.length
@@ -587,7 +588,7 @@ async function handleAsk(request, env, headers) {
     );
   }
 
-  return json
+  return json(
     {
       answer,
       model: data?.model || model,
