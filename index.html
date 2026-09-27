@@ -73,48 +73,76 @@
       <main id="main" tabindex="-1">
       <!-- HOME -->
       <section class="panel active" id="p-home" role="tabpanel" aria-labelledby="t-home">
-        <div class="hero2">
-          <div class="hero2-text">
-            <span class="pill" data-i18n="proto">NITI Intelligence Portal</span>
-            <h1 data-i18n="headline">Development Monitoring &amp; State Intelligence</h1>
-            <p data-i18n="tagline">Review official documents, monitor indicators, analyse evidence and prepare decision-ready outputs from one workspace.</p>
-            <div class="metrics" aria-label="Your activity">
-              <div class="metric"><b class="num" id="stDocs">0</b><span data-i18n="stdocs">Documents read</span></div>
-              <div class="metric"><b class="num" id="stPages">0</b><span data-i18n="stpages">Pages processed</span></div>
-              <div class="metric"><b class="num" id="stSlides">0</b><span data-i18n="stslides">Slides generated</span></div>
-            </div>
+        <div class="v3-welcome">
+          <div class="v3-welcome-copy">
+            <div class="v3-kicker">NITI INTELLIGENCE</div>
+            <h1>Welcome to NITI Intelligence</h1>
+            <p>Upload documents, analyse data, and create evidence-based presentations for stronger state development decisions.</p>
           </div>
-          <div class="drop" id="drop">
-            <div class="drop-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a5 5 0 1 1 .9-9.9A6 6 0 0 1 19 9a4.5 4.5 0 0 1-1 8.9"/><path d="M12 12v9M8.5 15.5 12 12l3.5 3.5"/></svg></div>
-            <h3 data-i18n="dropH">Drag files here or choose from your computer</h3>
-            <p data-i18n="dropP">Policy reports, minutes of meetings, scheme guidelines and KPI workbooks. Several files at once. Scanned PDFs are read page by page.</p>
-            <div class="types"><span>PDF</span><span>DOCX</span><span>XLSX</span><span>XLS</span><span>CSV</span><span>TXT</span></div>
-            <div class="row" style="justify-content:center">
-              <label class="btn btn-primary" for="fileInput"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span data-i18n="choose">Choose files</span></label>
-              <button type="button" class="btn btn-ghost" id="demoBtn">Load demo document</button>
-            </div>
-            <input type="file" id="fileInput" multiple accept=".pdf,.docx,.xlsx,.xls,.csv,.txt" class="sr">
+          <div class="v3-welcome-mark" aria-hidden="true">
+            <div class="v3-map-shape"></div>
+            <span>Development<br>Monitoring</span>
           </div>
         </div>
+
+        <div class="v3-quick-grid">
+          <button class="v3-quick v3-blue" type="button" data-go="home" onclick="document.getElementById('fileInput').click()">
+            <span class="v3-qicon">↑</span><span><b>Upload Document</b><small>PDF, Excel, CSV, Word</small></span><strong>›</strong>
+          </button>
+          <button class="v3-quick v3-gold" type="button" data-go="data">
+            <span class="v3-qicon">▥</span><span><b>Data Insights</b><small>Generate charts and key metrics</small></span><strong>›</strong>
+          </button>
+          <button class="v3-quick v3-purple" type="button" data-go="ppt">
+            <span class="v3-qicon">▣</span><span><b>Create Presentation</b><small>NITI deck format with insights</small></span><strong>›</strong>
+          </button>
+          <button class="v3-quick v3-green" type="button" data-go="ask">
+            <span class="v3-qicon">◌</span><span><b>Ask a Question</b><small>Get answers from your documents</small></span><strong>›</strong>
+          </button>
+        </div>
+
+        <div class="v3-home-grid">
+          <section class="v3-surface v3-recent-panel">
+            <div class="v3-section-head"><div><span>WORKSPACE</span><h2>Recent Analyses</h2></div><button type="button" class="v3-link" data-go="history">View all →</button></div>
+            <div class="v3-metrics">
+              <div><b class="num" id="stDocs">0</b><span>Documents</span></div>
+              <div><b class="num" id="stPages">0</b><span>Pages processed</span></div>
+              <div><b class="num" id="stSlides">0</b><span>Slides generated</span></div>
+            </div>
+            <div id="recent"></div>
+          </section>
+
+          <section class="v3-surface v3-system-panel">
+            <div class="v3-section-head"><div><span>SYSTEM</span><h2>Workspace status</h2></div></div>
+            <div class="v3-status-row"><span><i class="v3-dot"></i> Analysis service</span><b id="homeStatus">READY</b></div>
+            <div class="v3-status-row"><span>Loaded documents</span><b id="homeLoaded">0</b></div>
+            <div class="v3-status-row"><span>Supported formats</span><b>6</b></div>
+            <div class="v3-status-row"><span>Current workspace</span><b>STATE INTELLIGENCE</b></div>
+            <div class="v3-upload-mini">
+              <div><b>Start with a source document</b><small>Drop files into the workspace or choose from your computer.</small></div>
+              <label class="btn btn-primary btn-sm" for="fileInput">Upload</label>
+            </div>
+          </section>
+        </div>
+
+        <div class="v3-section-title">WORKSPACE TOOLS</div>
+        <div class="v3-tool-grid">
+          <button type="button" class="v3-tool" data-go="summary"><span>01</span><b>Document summary</b><small>Review the evidence note and export PDF or Word.</small></button>
+          <button type="button" class="v3-tool" data-go="data"><span>02</span><b>Data analysis</b><small>Explore workbook indicators, KPIs and charts.</small></button>
+          <button type="button" class="v3-tool" data-go="ppt"><span>03</span><b>Presentation</b><small>Build and download a structured NITI deck.</small></button>
+          <button type="button" class="v3-tool" data-go="audio"><span>04</span><b>Audio reading</b><small>Read the loaded source aloud in English or Hindi.</small></button>
+          <button type="button" class="v3-tool" data-go="ask"><span>05</span><b>Document Q&amp;A</b><small>Ask focused questions against loaded material.</small></button>
+          <button type="button" class="v3-tool" data-go="history"><span>06</span><b>Library</b><small>Reopen analyses saved in this browser.</small></button>
+        </div>
+
         <div class="progress" id="progress" aria-live="polite"></div>
         <div class="aibanner" id="homeAiBanner" hidden><span>Analysis services are currently unavailable. You can continue with local document processing.</span><button type="button" class="btn btn-ghost btn-sm" id="homeAiWhy">View status</button></div>
 
-        <h2 class="sechead" data-i18n="howH">How it works</h2>
-        <ol class="steps">
-          <li><span class="stepn">1</span><div><b data-i18n="s1">Upload</b><p data-i18n="s1p">Add PDF, Word or Excel files. Text, tables and scanned pages are read automatically.</p></div></li>
-          <li><span class="stepn">2</span><div><b data-i18n="s2">Review the note</b><p data-i18n="s2p">A one-page summary with key figures and action items is ready to download as PDF or Word.</p></div></li>
-          <li><span class="stepn">3</span><div><b data-i18n="s3">Present, listen and ask</b><p data-i18n="s3p">Build a NITI-format deck from the source text, chart the data, listen in English or Hindi, and ask questions.</p></div></li>
-        </ol>
-
-        <h2 class="sechead" data-i18n="getH">What you get</h2>
-        <div class="caps">
-          <div class="cap"><div class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M9 11h7M9 15h7"/></svg></div><b data-i18n="c1">Summary note</b><p data-i18n="c1p">Context, key points, key figures and action items on one page. PDF and Word.</p></div>
-          <div class="cap"><div class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg></div><b data-i18n="c2">Presentation</b><p data-i18n="c2p">Editable PowerPoint in NITI deck format, built from the original documents.</p></div>
-          <div class="cap"><div class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7"/></svg></div><b data-i18n="c4">Data insights</b><p data-i18n="c4p">KPI tiles and charts from workbooks and from figures inside reports.</p></div>
-          <div class="cap"><div class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg></div><b data-i18n="c3">Audio and Q&amp;A</b><p data-i18n="c3p">Listen to the full document in English or Hindi and ask questions about it.</p></div>
+        <div class="v3-drop-secondary" id="drop">
+          <div><b>Drop source documents here</b><span>PDF · DOCX · XLSX · XLS · CSV · TXT</span></div>
+          <label class="btn btn-primary btn-sm" for="fileInput">Choose files</label>
+          <button type="button" class="btn btn-ghost btn-sm" id="demoBtn">Load demo</button>
+          <input type="file" id="fileInput" multiple accept=".pdf,.docx,.xlsx,.xls,.csv,.txt" class="sr">
         </div>
-
-        <div id="recent"></div>
       </section>
 
       <!-- SUMMARY -->
