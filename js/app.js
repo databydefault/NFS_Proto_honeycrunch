@@ -102,7 +102,7 @@ async function geminiCall(input, options={}){
     prompt=input.map(t=>`${String(t.role||"user").toUpperCase()}: ${String(t.content||"")}`).join("\n\n");
   }
   const answer=await window.NITI_AI.ask(prompt,"",{
-    model:options.model||"analysis-service",
+    model:options.model||"gemini-3.8-flash",
     thinking_level:options.thinking_level||"low"
   });
   return {text:String(answer||"")};
