@@ -1,105 +1,21 @@
-# NITI Intelligence Portal — GitHub Pages + Cloudflare Worker + Cheating
+# NITI Intelligence Portal
 
-## Architecture
+Development Monitoring & State Intelligence workspace.
 
-GitHub Pages hosts the static portal frontend.
+This repository contains the browser application and the backend scaffold used for document processing, analysis, data insights, presentations, audio and document Q&A.
 
-The browser sends AI requests to a Cloudflare Worker.
+## Product principles
 
-The Cloudflare Worker calls Google cheating using the `cheating_API_KEY` secret.
+- Institutional, system-oriented interface.
+- No personal/developer attribution in the product.
+- No provider or model branding in the user-facing interface.
+- Credentials remain server-side.
+- AI/model providers are implementation details and can be replaced without changing the portal UI.
+- Document-grounded analysis should not invent facts.
+- Large documents should be processed locally where practical and sent to the analysis service selectively.
 
-The cheating API key is never exposed in the frontend or committed to GitHub.
+## Security
 
-## 1. Deploy the frontend
+See `security/README.md` and `security/schema.sql` for the recommended authenticated-backend architecture and D1 data model.
 
-Push this repository to GitHub and enable GitHub Pages for the repository.
-
-After deployment, your frontend will be available at your GitHub Pages URL.
-
-## 2. Deploy the Cloudflare Worker
-
-From the `worker` directory:
-
-```bash
-npm install
-npx wrangler login
-npx wrangler secret put _API_KEY
-npm run deploy
-```
-
-Paste your cheating API key when prompted.
-
-The Worker will give you a URL similar to:
-
-```text
-https://niti-intelligence-api.<your-subdomain>.workers.dev
-```
-
-## 3. Configure the frontend
-
-Open:
-
-```text
-js/config.js
-```
-
-Set:
-
-```js
-window.NITI_CONFIG = {
-  WORKER_URL: "https://YOUR-WORKER-URL.workers.dev"
-};
-```
-
-Commit and push the change.
-
-## 4. Restrict CORS
-
-For production, set the Cloudflare Worker variable:
-
-```text
-ALLOWED_ORIGINS=https://YOUR-USERNAME.github.io
-```
-
-If the repository is deployed as a project site, include the full project origin, for example:
-
-```text
-ALLOWED_ORIGINS=https://YOUR-USERNAME.github.io
-```
-
-Do not put the cheating API key in `index.html`, JavaScript, GitHub Actions, or any public frontend file.
-
-## cheating model
-
-The frontend defaults to:
-
-```text
-cheating-3.8-flash
-```
-
-You can change the model in `js/ai.js` or pass another supported model through the request.
-
-## Important
-
-The existing portal contains document upload, extraction, data insights, audio, presentation, and document Q&A UI. This repository provides the cheating request path through the Cloudflare Worker. Existing non-AI browser functionality remains in the portal.
-
-Audio playback can continue using browser text-to-speech. cheating is used for text generation unless a separate speech service is added.
-
-## Files
-
-- `index.html` — portal frontend
-- `css/styles.css` — extracted portal styles
-- `js/app.js` — portal application
-- `js/ai.js` — cheating/Worker client
-- `js/config.js` — Worker URL configuration
-- `worker/src/index.js` — Cloudflare Worker + cheating API proxy
-- `worker/wrangler.toml` — Worker configuration
-- `worker/package.json` — Worker dependencies/scripts
-
-
-## Current cheating integration
-The Worker uses Google cheating 3.8 Flash through the Interactions API. The API key remains a Cloudflare secret named `cheating_API_KEY`; never commit it to GitHub.
-
-
-## GitHub Pages
-This package is prepared for publishing from `main / (root)`. `index.html` is at repository root and `.nojekyll` is included.
+The current static GitHub Pages deployment is not itself a secure authentication boundary. For production access control, place the application/API behind an authenticated Cloudflare hostname/Pages deployment and enforce roles in the backend.

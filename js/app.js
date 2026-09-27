@@ -3,7 +3,7 @@
 const I18N={
  en:{},
  hi:{
-  skip:"मुख्य सामग्री पर जाएँ",proto:"प्रोटोटाइप",forwho:"विकास निगरानी एवं राज्य टीमों हेतु प्रोटोटाइप, नीति आयोग",textsize:"अक्षर आकार",contrast:"उच्च कंट्रास्ट",dark:"डार्क मोड",
+  skip:"मुख्य सामग्री पर जाएँ",proto:"नीति इंटेलिजेंस पोर्टल",forwho:"विकास निगरानी एवं राज्य इंटेलिजेंस",textsize:"अक्षर आकार",contrast:"उच्च कंट्रास्ट",dark:"डार्क मोड",
   brandsub:"दस्तावेज़ इंटेलिजेंस कार्यक्षेत्र",title:"नीति इंटेलिजेंस पोर्टल",navlbl:"कार्यक्षेत्र",headline:"आधिकारिक दस्तावेज़ों को नोट, प्रस्तुति और ऑडियो में बदलें",tagline:"रिपोर्ट, कार्यवृत्त और KPI वर्कबुक अपलोड करें। एक पृष्ठ का नोट, नीति प्रारूप में प्रस्तुति, चार्ट और वाचन पाएँ।",
   stdocs:"पढ़े गए दस्तावेज़",stpages:"संसाधित पृष्ठ",stslides:"बनाई गई स्लाइड",
   tHome:"होम",tUpload:"अपलोड",howH:"यह कैसे काम करता है",s1:"अपलोड करें",s1p:"PDF, Word या Excel फ़ाइल जोड़ें। टेक्स्ट, तालिकाएँ और स्कैन पृष्ठ स्वतः पढ़े जाते हैं।",s2:"नोट देखें",s2p:"मुख्य आँकड़ों और कार्य बिंदुओं सहित एक पृष्ठ का सारांश, PDF या Word में डाउनलोड योग्य।",s3:"प्रस्तुत करें, सुनें और पूछें",s3p:"मूल टेक्स्ट से नीति-प्रारूप डेक बनाएँ, डेटा का चार्ट देखें, अंग्रेज़ी या हिंदी में सुनें और प्रश्न पूछें।",getH:"आपको क्या मिलता है",exampleP:"पहले आउटपुट देखना चाहते हैं?",a11y:"सुगम्यता",readable:"पठनीय फ़ॉन्ट (Atkinson Hyperlegible)",spacing:"अधिक पंक्ति व अक्षर अंतर",motion:"एनिमेशन कम करें",shortcuts:"कीबोर्ड शॉर्टकट",k1:"अनुभाग बदलें",k2:"फ़ाइलें अपलोड करें",k3:"ऑडियो चलाएँ/रोकें",k4:"यह पैनल खोलें",k5:"प्रश्न पूछें",reset:"डिफ़ॉल्ट पर लौटें",zip:"सभी फ़ाइलें (.zip)",tSummary:"सारांश",tPpt:"प्रस्तुति",tData:"डेटा विश्लेषण",tAudio:"ऑडियो",tAsk:"दस्तावेज़ से पूछें",tHistory:"इतिहास",
@@ -22,25 +22,25 @@ const I18N={
   audH:"ऑडियो वाचन",audP:"पूरा दस्तावेज़ आपके ब्राउज़र में पढ़ा जाता है। हिंदी में अनुवाद चलते-चलते खंडवार होता है।",audDoc:"दस्तावेज़",audLang:"भाषा",audVoice:"आवाज़",audRate:"गति",stop:"रोकें",
   askH:"दस्तावेज़ से पूछें",askP:"उत्तर केवल लोड किए गए दस्तावेज़ों से, स्रोत खंड सहित।",newChat:"नई बातचीत",askPh:"दस्तावेज़ों के बारे में प्रश्न पूछें",send:"पूछें",
   hisH:"इतिहास",hisP:"इस ब्राउज़र में संसाधित दस्तावेज़। यह अन्य उपयोगकर्ताओं के साथ साझा नहीं होता।",hisClear:"इतिहास साफ़ करें",
-  foot:"नीति इंटेलिजेंस पोर्टल · आंतरिक समीक्षा हेतु प्रोटोटाइप · बनाई गई सामग्री को मूल दस्तावेज़ों से सत्यापित करें"
+  foot:"नीति इंटेलिजेंस पोर्टल · बनाई गई सामग्री को मूल दस्तावेज़ों से सत्यापित करें"
  }
 };
 const MSG={
- en:{aiOn:"AI assist on",aiOff:"Basic mode",aiCheck:"Checking",reading:"Reading",ready:"Ready",error:"Error",pages:"pages",sheets:"sheets",
+ en:{aiOn:"Analysis ready",aiOff:"Basic mode",aiCheck:"Checking",reading:"Reading",ready:"Ready",error:"Error",pages:"pages",sheets:"sheets",
   noDocs:"Add documents first.",sumEmpty:"No summary yet",sumEmptyP:"Upload documents and choose Generate summary.",
   pptEmpty:"No presentation yet",pptEmptyP:"Upload documents, then build the deck here.",dataEmpty:"No data yet",dataEmptyP:"Upload an Excel, CSV, PDF or Word file to see KPI tiles and charts.",
   audEmpty:"Nothing to read yet",histEmpty:"No history yet",histEmptyP:"Summaries you generate are kept here in this browser.",
   stale:"Documents changed since this summary was made.",thinking:"Reading the documents and drafting…",copied:"Copied",saved:"Download started",
-  basic:"This summary was made in basic mode (AI off), so it is extracted from the text rather than written. Open “AI off · why?” at the top of the page to turn on AI for a proper summary.",
-  askOff:"Questions need AI, which is not available in this view.",hiOff:"Hindi reading needs AI translation, which is not available in this view.",
+  basic:"This summary was made in basic mode (analysis service unavailable), so it is extracted from the text rather than written. Open “Analysis unavailable” at the top of the page to turn on AI for a proper summary.",
+  askOff:"Questions need the analysis service, which is not available in this view.",hiOff:"Hindi reading needs the analysis service for translation, which is not available in this view.",
   noHiVoice:"No Hindi voice is installed on this device, so Hindi text may be read with a default voice. On Windows, add Hindi under Settings › Time & language › Speech. Chrome's online Google हिन्दी voice also works.",
   translating:"Translating the next section into Hindi…"},
- hi:{aiOn:"AI सहायता चालू",aiOff:"बेसिक मोड",aiCheck:"जाँच जारी",reading:"पढ़ रहा है",ready:"तैयार",error:"त्रुटि",pages:"पृष्ठ",sheets:"शीट",
+ hi:{aiOn:"विश्लेषण तैयार",aiOff:"बेसिक मोड",aiCheck:"जाँच जारी",reading:"पढ़ रहा है",ready:"तैयार",error:"त्रुटि",pages:"पृष्ठ",sheets:"शीट",
   noDocs:"पहले दस्तावेज़ जोड़ें।",sumEmpty:"अभी कोई सारांश नहीं",sumEmptyP:"दस्तावेज़ अपलोड करें और 'सारांश बनाएँ' चुनें।",
   pptEmpty:"अभी कोई प्रस्तुति नहीं",pptEmptyP:"पहले सारांश बनाएँ, फिर यहाँ डेक तैयार करें।",dataEmpty:"कोई वर्कबुक लोड नहीं",dataEmptyP:"KPI टाइल और चार्ट देखने के लिए Excel या CSV फ़ाइल अपलोड करें।",
   audEmpty:"पढ़ने के लिए अभी कुछ नहीं",histEmpty:"अभी कोई इतिहास नहीं",histEmptyP:"आपके बनाए सारांश इस ब्राउज़र में यहाँ रखे जाते हैं।",
   stale:"इस सारांश के बाद दस्तावेज़ बदले गए हैं।",thinking:"दस्तावेज़ पढ़े जा रहे हैं और मसौदा तैयार हो रहा है…",copied:"कॉपी हो गया",saved:"डाउनलोड शुरू",
-  basic:"इस दृश्य में AI उपलब्ध नहीं है, इसलिए पोर्टल बेसिक निष्कर्षण का उपयोग कर रहा है। पूर्ण AI सारांश, प्रस्तुति, हिंदी ऑडियो और प्रश्नोत्तर के लिए Gemini Worker को कॉन्फ़िगर करके पोर्टल खोलें।",
+  basic:"इस दृश्य में AI उपलब्ध नहीं है, इसलिए पोर्टल बेसिक निष्कर्षण का उपयोग कर रहा है। पूर्ण AI सारांश, प्रस्तुति, हिंदी ऑडियो और प्रश्नोत्तर के लिए Analysis service को कॉन्फ़िगर करके पोर्टल खोलें।",
   askOff:"प्रश्नों के लिए AI आवश्यक है, जो इस दृश्य में उपलब्ध नहीं है।",hiOff:"हिंदी वाचन के लिए AI अनुवाद आवश्यक है, जो इस दृश्य में उपलब्ध नहीं है।",
   noHiVoice:"इस डिवाइस पर हिंदी आवाज़ स्थापित नहीं है। Windows में Settings › Time & language › Speech में हिंदी जोड़ें।",
   translating:"अगला खंड हिंदी में अनुवादित हो रहा है…"}
@@ -102,7 +102,7 @@ async function geminiCall(input, options={}){
     prompt=input.map(t=>`${String(t.role||"user").toUpperCase()}: ${String(t.content||"")}`).join("\n\n");
   }
   const answer=await window.NITI_AI.ask(prompt,"",{
-    model:options.model||"gemini-3.8-flash",
+    model:options.model||"analysis-service",
     thinking_level:options.thinking_level||"low"
   });
   return {text:String(answer||"")};
@@ -111,7 +111,7 @@ async function geminiCall(input, options={}){
 geminiCall.json=async function(input, options={}){
   const r=await geminiCall(input,options);
   const parsed=parseAIJson(r.text);
-  if(!parsed) { const e=new Error("Gemini returned invalid JSON."); e.code="invalid_json"; throw e; }
+  if(!parsed) { const e=new Error("The analysis service returned an invalid response."); e.code="invalid_json"; throw e; }
   return parsed;
 };
 
@@ -123,22 +123,22 @@ let aiChecked=false;
 function renderAiChip(){
   const c=$("#aiChip"),t=$("#aiChipTxt");
   if(!aiChecked){t.textContent=m("aiCheck");c.classList.add("off");return}
-  c.classList.toggle("off",!sample); t.textContent=sample?m("aiOn"):(LANG==="hi"?"AI बंद · क्यों?":"AI off · why?");
+  c.classList.toggle("off",!sample); t.textContent=sample?m("aiOn"):(LANG==="hi"?"विश्लेषण अनुपलब्ध":"Analysis unavailable");
   const hb=$("#homeAiBanner"); if(hb)hb.hidden=!!sample;
 }
 function aiReason(){
-  if(sample)return {title:"AI assist is on",body:"Summaries, presentations, document charts, Hindi translation and questions use Gemini 3.8 Flash through the Cloudflare Worker. Your Gemini API key stays on the server and is not exposed in the browser.",steps:[]};
-  return {title:"AI isn't configured",body:"The portal could not connect to its Cloudflare Worker. Check the Worker URL in js/config.js and the GEMINI_API_KEY secret in Cloudflare.",steps:["Confirm the Worker is deployed.","Confirm GEMINI_API_KEY is configured as a Cloudflare secret."]};
+  if(sample)return {title:"Analysis service is available",body:"Summaries, presentations, document analysis, Hindi translation and questions are available through the secure analysis service. Credentials remain server-side.",steps:[]};
+  return {title:"Analysis service is unavailable",body:"The portal could not connect to the analysis service. Check the secure backend configuration.",steps:["Confirm the secure backend is deployed.","Confirm the backend credential is configured as a server-side secret."]};
 }
 function renderAiPanel(){
   const p=$("#aiPanel"); if(!p)return; const r=aiReason();
   p.innerHTML=`<h4>${esc(r.title)}</h4><p>${esc(r.body)}</p>${r.steps.length?`<ol>${r.steps.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`:""}
    <div class="row"><button type="button" class="btn btn-ghost btn-sm" id="aiRecheck">Check again</button>${sample?`<button type="button" class="btn btn-ghost btn-sm" id="aiTest">Test AI</button>`:""}</div>
    ${AI.test?`<p style="color:var(--ink)">${esc(AI.test)}</p>`:""}
-   <dl class="diag"><dt>Gemini Worker</dt><dd>${sample?"connected":"not connected"}</dd><dt>AI capability</dt><dd>${sample?"available":"not available"}</dd><dt>Model</dt><dd>gemini-3.8-flash</dd><dt>Last AI error</dt><dd>${esc(AI.lastErr||"none")}</dd><dt>Checked</dt><dd>${AI.checkedAt?AI.checkedAt.toLocaleTimeString("en-IN"):"—"}</dd></dl>`;
-  $("#aiRecheck").onclick=async()=>{AI.test="";try{await initCaps();AI.test=sample?"Gemini is connected.":"Gemini is not available."}catch(e){AI.test="Connection check failed."}renderAiPanel()};
-  const te=$("#aiTest"); if(te)te.onclick=async()=>{te.disabled=true;AI.test="Asking Gemini…";renderAiPanel();
-    try{const r_=await geminiCall("Reply with exactly: AI assist is working.");AI.test="Test passed: "+r_.text.trim().slice(0,80);AI.lastErr=""}catch(e){AI.lastErr=e&&e.code||"error";AI.test="Test failed: "+(e&&e.message||"unknown") ;}
+   <dl class="diag"><dt>Analysis service</dt><dd>${sample?"connected":"not connected"}</dd><dt>Analysis capability</dt><dd>${sample?"available":"not available"}</dd><dt>Service</dt><dd>analysis-service</dd><dt>Last AI error</dt><dd>${esc(AI.lastErr||"none")}</dd><dt>Checked</dt><dd>${AI.checkedAt?AI.checkedAt.toLocaleTimeString("en-IN"):"—"}</dd></dl>`;
+  $("#aiRecheck").onclick=async()=>{AI.test="";try{await initCaps();AI.test=sample?"Analysis service is connected.":"Analysis service is not available."}catch(e){AI.test="Connection check failed."}renderAiPanel()};
+  const te=$("#aiTest"); if(te)te.onclick=async()=>{te.disabled=true;AI.test="Running service check…";renderAiPanel();
+    try{const r_=await geminiCall("Reply with exactly: Analysis service is working.");AI.test="Service check passed: "+r_.text.trim().slice(0,80);AI.lastErr=""}catch(e){AI.lastErr=e&&e.code||"error";AI.test="Service check failed: "+(e&&e.message||"unknown") ;}
     renderAiChip();renderAiPanel()};
 }
 function toggleAiPanel(open){const p=$("#aiPanel"),b=$("#aiChip");const o=open??p.hidden;p.hidden=!o;b.setAttribute("aria-expanded",o);if(o)renderAiPanel()}
@@ -149,9 +149,9 @@ document.addEventListener("click",e=>{const p=$("#aiPanel");if(p&&!p.hidden&&!e.
 function aiErr(e){
   const c=e&&e.code; if(c)AI.lastErr=c;
   if(c==="prompt_too_large")return "The documents are too long to send in one request. Remove a file and try again.";
-  if(c==="invalid_json")return "The AI reply could not be read. Try again.";
+  if(c==="invalid_json")return "The analysis response could not be read. Try again.";
   if(c==="cancelled")return "Stopped.";
-  return e&&e.message?String(e.message):"The AI service did not respond. Try again in a moment.";
+  return e&&e.message?String(e.message):"The analysis service did not respond. Try again in a moment.";
 }
 
 /* ================= file ingestion ================= */
@@ -307,7 +307,7 @@ async function runOcr(docs){
       }catch(e){d.note=aiErr(e);break}
     }
     d.text=d.pageTexts.map(x=>x.t).join("\n\n"); d.ocrDone=true;
-    d.note=`${pages.length} scanned page(s) read with AI`;
+    d.note=`${pages.length} scanned page(s) read with the analysis service`;
     renderTray();
   }
 }
@@ -498,7 +498,7 @@ function basicSummary(docs,big){
   const seen=new Set();
   const keyNums=numbers.sort((a,b)=>(b.score||0)-(a.score||0)).filter(n=>{const k=n.value+n.label.slice(0,20);if(seen.has(k))return false;seen.add(k);return true}).slice(0,big?8:6).map(({value,label,context})=>({value,label,context}));
   const acts=actions.sort((a,b)=>b.score-a.score).slice(0,big?10:7).map(({action,owner,due})=>({action,owner,due}));
-  return {title:title||(docs.length===1?docs[0].name.replace(/\.[^.]+$/,""):`${docs.length} documents`),doc_date:docDate,doc_type:(kind||"Document")+" · basic extraction (AI off)",overview,sections:outSecs,key_numbers:keyNums,action_items:acts};
+  return {title:title||(docs.length===1?docs[0].name.replace(/\.[^.]+$/,""):`${docs.length} documents`),doc_date:docDate,doc_type:(kind||"Document")+" · basic extraction (analysis service unavailable)",overview,sections:outSecs,key_numbers:keyNums,action_items:acts};
 }
 function summaryWords(s){return wordCount([s.title,s.overview,...s.sections.flatMap(x=>[x.heading,x.narrative||"",...x.points]),...s.key_numbers.map(k=>k.value+" "+k.label+" "+k.context),...s.action_items.map(a=>a.action+a.owner+a.due)].join(" "))}
 function renderSummary(){
@@ -579,8 +579,8 @@ function buildPdfK(k){
   if(s.action_items.length)table("Action items",["#","Action","Owner","Timeline"],[9,W-2*M-9-40-32,40,32],s.action_items.map((a,i)=>[String(i+1),a.action,a.owner,a.due]));
   const n=doc.getNumberOfPages();
   for(let i=1;i<=n;i++){doc.setPage(i);doc.setDrawColor(...RULE);doc.setLineWidth(.3);doc.line(M,H-12,W-M,H-12);doc.setFont("helvetica","normal");doc.setFontSize(7.2);doc.setTextColor(124,134,162);
-    doc.text("Generated by NITI Intelligence Portal (prototype). Verify figures against the source documents.",M,H-8);
-    doc.text(`Page ${i} of ${n}  |  NITI Intelligence Portal - Prototype`,W-M,H-8,{align:"right"})}
+    doc.text("Generated by NITI Intelligence Portal. Verify figures against the source documents.",M,H-8);
+    doc.text(`Page ${i} of ${n}  |  NITI Intelligence Portal`,W-M,H-8,{align:"right"})}
   return {blob:doc.output("blob"),pages:n};
 }
 function buildPdf(){const target=S.result&&summaryWords(S.result.summary)>720?2:1;let last;for(const k of [1,.95,.9,.86,.82,.78,.74,.7]){last=buildPdfK(k);if(last.pages<=target)break}return last.blob}
@@ -611,7 +611,7 @@ async function buildDocx(){
   const doc=new Document({creator:"NITI Intelligence Portal",title:s.title,styles:{default:{document:{run:{font:"Arial",size:20}}}},
     sections:[{properties:{page:{size:{width:11906,height:16838},margin:{top:800,bottom:800,left:1000,right:1000}}},
       headers:{default:new Header({children:[P([R("NITI INTELLIGENCE PORTAL",{color:NAVY,bold:true,size:15}),R("\tSummary Note",{color:MUT,size:15})],{tabStops:[{type:"right",position:TW}],border:{bottom:{style:BorderStyle.SINGLE,size:6,color:"C8D0DE",space:4}}})]})},
-      footers:{default:new Footer({children:[P(R("Generated by NITI Intelligence Portal (prototype). Verify figures against source documents. NITI Intelligence Portal · Prototype",{color:"7C86A2",size:14}),{alignment:AlignmentType.RIGHT})]})},
+      footers:{default:new Footer({children:[P(R("Generated by NITI Intelligence Portal. Verify figures against source documents.",{color:"7C86A2",size:14}),{alignment:AlignmentType.RIGHT})]})},
       children:kids}]});
   return Packer.toBlob(doc);
 }
@@ -846,7 +846,7 @@ function buildPptx(){
   {const s=base(tabs.length?"Annexure: Sources":"Annexure");
     const items=[{text:"Source documents",options:{bold:true,color:BLUE2,breakLine:true}},...deckFiles().map(f=>({text:`${f.name} (${f.kind.toUpperCase()}, ${f.pages} ${f.kind==="xlsx"||f.kind==="csv"?"sheets":"pages"})`,options:{bullet:true,breakLine:true}})),
       ...(an.notes.length?[{text:" ",options:{breakLine:true}},{text:"Notes",options:{bold:true,color:BLUE2,breakLine:true}},...an.notes.map(n=>({text:n,options:{bullet:true,breakLine:true}}))]:[]),
-      {text:" ",options:{breakLine:true}},{text:"Prepared with NITI Intelligence Portal (prototype). Figures should be verified against the source documents.",options:{italic:true,color:"56607C",fontSize:12}}];
+      {text:" ",options:{breakLine:true}},{text:"Prepared with NITI Intelligence Portal. Figures should be verified against the source documents.",options:{italic:true,color:"56607C",fontSize:12}}];
     s.addShape(pptx.ShapeType.rect,{x:0.5,y:1.25,w:W-1,h:5.65,fill:{color:PANEL},line:{color:PANEL}});
     s.addText(items,{x:0.8,y:1.4,w:W-1.6,h:5.35,fontFace:sans,fontSize:15,color:"1A1A1A",valign:"top",paraSpaceAfter:6,fit:"shrink"})}
   // thanks
@@ -902,7 +902,7 @@ function renderData(){
   if(textDocs.length){
     const F=S.fig;
     html+=`<div class="eyeline"><h3>Figures found in ${textDocs.length===1?esc(textDocs[0].name):textDocs.length+" documents"}</h3>${sample&&F&&!F.busy?`<button class="btn btn-ghost btn-sm" id="figRefresh">Extract again</button>`:""}</div>`;
-    if(!sample){html+=notice("Charts from PDF and Word files need AI, which is not available in this view. Upload an Excel or CSV file to chart data directly.")}
+    if(!sample){html+=notice("Charts from PDF and Word files need the analysis service, which is not available in this view. Upload an Excel or CSV file to chart data directly.")}
     else if(!F||F.busy||F.key!==docKey()){html+=`<div class="card empty"><span class="spin" style="width:26px;height:26px;color:var(--brand)"></span><b>Finding tables and figures in the documents…</b><span>This takes about half a minute.</span></div>`}
     else if(F.error){html+=notice(F.error,"warn")}
     else{
