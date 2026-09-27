@@ -125,6 +125,7 @@ function renderAiChip(){
   if(!aiChecked){t.textContent=m("aiCheck");c.classList.add("off");return}
   c.classList.toggle("off",!sample); t.textContent=sample?m("aiOn"):(LANG==="hi"?"विश्लेषण अनुपलब्ध":"Analysis unavailable");
   const hb=$("#homeAiBanner"); if(hb)hb.hidden=!!sample;
+  const hs=$("#homeStatus"); if(hs)hs.textContent=sample?"READY":"OFFLINE";
 }
 function aiReason(){
   if(sample)return {title:"Analysis service is available",body:"Summaries, presentations, document analysis, Hindi translation and questions are available through the secure analysis service. Credentials remain server-side.",steps:[]};
@@ -323,6 +324,7 @@ function renderTray(){
   }).join("");
   $("#trayEmpty").hidden=S.docs.length>0;
   $("#trayCount").textContent=S.docs.filter(d=>d.status==="ready").length;
+  const hl=$("#homeLoaded"); if(hl)hl.textContent=S.docs.filter(d=>d.status==="ready").length;
   $("#genBtn").disabled=!S.docs.some(d=>d.status==="ready")||busy.sum;
 }
 $("#fileList").addEventListener("click",e=>{const b=e.target.closest("[data-rm]");if(!b)return;S.docs=S.docs.filter(d=>d.id!==b.dataset.rm);S.stale=!!S.result;stopAudio();renderTray();renderAll()});
@@ -1131,6 +1133,20 @@ function renderAsk(){
   box.scrollTop=box.scrollHeight;
 }
 $("#msgs").addEventListener("click",e=>{const c=e.target.closest("[data-q]");if(c){$("#askBox").value=c.dataset.q;ask()}});
+// Workspace command search
+const globalSearch=$("#globalSearch");
+if(globalSearch){
+  globalSearch.addEventListener("keydown",e=>{
+    if(e.key!=="Enter")return;
+    const q=globalSearch.value.trim();
+    if(!q)return;
+    switchTab("ask");
+    const box=$("#askBox");
+    if(box){box.value=q;box.focus();}
+    globalSearch.value="";
+  });
+}
+
 $("#askForm").addEventListener("submit",e=>{e.preventDefault();ask()});
 $("#askBox").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();ask()}});
 $("#askClear").onclick=()=>{S.chat=[];renderAsk()};
