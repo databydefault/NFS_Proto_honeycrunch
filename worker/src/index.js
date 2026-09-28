@@ -482,7 +482,7 @@ async function handleAsk(request, env, headers) {
   // endpoints for the later access-control rollout.
   const session = await getSession(request, env);
 
-  if (!env.GEMINI_API_KEY) {
+  if (!env.OPENAI_API_KEY) {
     return json(
       {
         error:
@@ -499,7 +499,7 @@ async function handleAsk(request, env, headers) {
   const context = String(body.context || "").trim();
 
   const model = String(
-    body.model || "gemini-3.8-flash"
+    body.model || "gpt-5.6-luna"
   );
 
   const thinkingLevel = [
@@ -529,40 +529,42 @@ async function handleAsk(request, env, headers) {
     ? `DOCUMENT CONTEXT:\n${context}\n\nUSER REQUEST:\n${prompt}`
     : prompt;
 
-  const endpoint =
-    "https://generativelanguage.googleapis.com/v1beta/interactions";
+  const endpoint = "https://api.openai.com/v1/responses";
 
-  const geminiResponse = await fetch(endpoint, {
+  const openaiResponse = await fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-goog-api-key": env.GEMINI_API_KEY
+      "Authorization": `Bearer ${env.OPENAI_API_KEY}`
     },
     body: JSON.stringify({
       model,
+      instructions: systemInstruction,
       input,
-      system_instruction: systemInstruction,
-      generation_config: {
-        thinking_level: thinkingLevel
+      reasoning: {
+        effort: thinkingLevel
       }
     })
   });
 
-  const data = await geminiResponse.json().catch(() => ({}));
+  const data = await openaiResponse.json().catch(() => ({}));
 
-  if (!geminiResponse.ok) {
+  if (!openaiResponse.ok) {
     return json(
       {
         error:
           data?.error?.message ||
           "AI request failed."
       },
-      geminiResponse.status,
+      openaiResponse.status,
       headers
     );
   }
 
-  const answer = textFromInteraction(data);
+  const answer =
+    typeof data?.output_text === "string"
+      ? data.output_text.trim()
+      : textFromInteraction(data);
 
   if (!answer) {
     return json(
