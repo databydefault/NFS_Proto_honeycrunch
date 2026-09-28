@@ -654,25 +654,69 @@ function excelCharts(){
   if(!out.length&&S.fig&&S.fig.key===docKey()&&S.fig.datasets)S.fig.datasets.slice(0,2).forEach(d=>out.push({source:d.source||"documents",kind:d.kind,labels:d.labels,series:d.series,title:d.title,takeaway:d.insight}));
   return out;
 }
-const DECK_SPEC=(n,hasCharts)=>`You are preparing a presentation for NITI Aayog (Government of India) in its standard deck format. Build the slides DIRECTLY FROM THE SOURCE DOCUMENTS below — their sections, data, tables and wording — not from a summary. Cover every major section of the documents in order. Build the CONTENT slides only (cover, contents, annexure and closing slides are added automatically).
-Make exactly ${n} content slides${n<=3?"; with so few slides you may combine Recommendations and Next steps into one slide":""}. Order:
-1. Key findings (type "findings", 3-6 cards) summarising the whole material.
-2. One or more slides per major section of the documents (types "findings", "stats", "bullets", "table"${hasCharts?"":", or \"chart\" when the documents state a series of comparable numbers"}). Reproduce important tables from the documents as "table" slides.
-3. Recommendations (type "recommendations", 3-5 items grounded in the documents).
-4. Next steps (type "next_steps", 3-8 rows, from actions, owners and deadlines in the documents).
-Text must be slide-ready: headings under 8 words, card text 20-40 words, bullets under 25 words. Use only facts from the documents; never invent numbers.
-Slide JSON types:
-{"type":"findings","title":"...","items":[{"head":"...","text":"..."}]}
-{"type":"stats","title":"...","stats":[{"value":"8,149","label":"...","context":"..."}],"note":"one-line takeaway"}
-{"type":"bullets","title":"...","intro":"optional one-line lead","bullets":["..."]}
-{"type":"table","title":"...","columns":["..."],"rows":[["..."]]}   (max 5 columns, 8 rows)
-{"type":"chart","title":"...","chart":{"kind":"bar|line|pie","labels":["..."],"series":[{"name":"...","values":[1,2]}]},"takeaway":"..."}
-{"type":"recommendations","title":"Recommendations","items":[{"head":"...","text":"..."}]}
-{"type":"next_steps","title":"Next Steps","steps":[{"action":"...","owner":"...","timeline":"..."}]}
-Also give an annexure: supporting detail tables taken from the documents (max 2 tables, 10 rows each) and source notes.
-Reply with only JSON: {"deck_title":"...","subtitle":"...","slides":[...],"annexure":{"tables":[{"title":"...","columns":["..."],"rows":[["..."]]}],"notes":["..."]}}`;
-
-async function generateDeck(){
+function cleanPresentationText(text){
+  const raw=String(text||"").replace(/\r/g,"").replace(/[\u200B\uFEFF]/g,"");
+  const lines=raw.split("\n").map(x=>x.trim());
+  const out=[]; let inToc=false, tocHits=0, tocRun=0;
+  const noise=/^(?:copyright\s*©?\s*\d{4}\s*niti\s*aayog|copyright\s*©|all rights reserved|www\.nitiforstates\.gov\.in|https?:\/\/\S+|page\s*\d+)$/i;
+  const tocHead=/^(?:table of contents|contents|toc)$/i;
+  const tocEntry=/^(?:\d+[.)]\s*)?.{2,110}(?:\.{2,}\s*)?\d{1,3}$/;
+  for(const l0 of lines){
+    const l=l0.trim(); if(!l)continue;
+    if(noise.test(l)||/^\d{1,3}$/.test(l))continue;
+    if(tocHead.test(l)){inToc=true;tocHits=0;tocRun=0;continue}
+    if(inToc){
+      if(tocEntry.test(l)){tocHits++;tocRun++;continue}
+      if(tocRun>0&&tocHits>=2){inToc=false;tocHits=0;tocRun=0}
+      else if(tocRun<3){tocRun++;continue}
+      else{inToc=false}
+      if(inToc)continue;
+    }
+    out.push(l);
+  }
+  return out.join("\n").replace(/(?:^|\n)\s*copyright\s*©?.*?all rights reserved\.?\s*(?=\n|$)/gi,"").replace(/\n{3,}/g,"\n\n").trim();
+}
+function presentationBlock(d,max){
+  const cleaned=cleanPresentationText(d.text);
+  const t=cleaned.length>max?cleaned.slice(0,max)+"\n[…truncated]":cleaned;
+  return `### Document: ${d.name} (${d.kind.toUpperCase()}, ${d.pages} ${d.kind==="xlsx"||d.kind==="csv"?"sheets":"pages"})\n${t}`;
+}
+const DECK_SPEC=(n,hasCharts)=>`You are a senior government presentation editor preparing a decision-ready presentation for NITI Aayog (Government of India).
+SOURCE DISCIPLINE:
+- Use ONLY substantive evidence in the SOURCE DOCUMENTS. Never invent, infer, estimate, round, or add facts.
+- Ignore PDF extraction noise: copyright notices, website URLs, page numbers, running headers/footers, navigation, table-of-contents entries, repeated headings and OCR artefacts.
+- A heading is NOT a finding. A table-of-contents line is NOT evidence. Never turn "Overview", "Contents", "Solution", "Introduction" or "Index" into findings unless substantive evidence follows it.
+- Never use copyright, "All Rights Reserved", website URLs or page numbers as slide content.
+STORYLINE:
+- Build an executive storyline, not a document dump.
+- Start with 3-6 actual findings that represent the most decision-relevant facts across the whole source.
+- Then cover substantive major sections in source order.
+- Prefer evidence-rich slides: figures, changes, comparisons, decisions, implementation status, risks, gaps and stated actions.
+- Do not create a slide merely because a heading exists. Combine thin sections when needed.
+- Preserve terminology and figures exactly as supported by the source.
+- If the source has no recommendations, do not manufacture them. Use only stated recommendations, decisions, actions or next steps.
+Make exactly ${n} content slides. Cover, contents, annexure and closing slides are added automatically.
+ALLOWED CONTENT SLIDES:
+1. Key findings: type "findings", 3-6 evidence-based cards. Each card head must be a substantive finding, not a section label.
+2. Major sections: types "findings", "stats", "bullets", "table", or "chart" when supported by comparable source data.
+3. Recommendations/actions: type "recommendations", 3-5 source-supported items only.
+4. Next steps: type "next_steps", 3-8 source-stated actions with owners/deadlines when available.
+TEXT LIMITS:
+- Slide titles: under 8 words.
+- Finding/recommendation heads: 3-10 words, written as substantive statements.
+- Card text: 20-40 words.
+- Bullets: under 25 words.
+- Stats: preserve exact source values and units.
+- Tables: maximum 5 columns and 8 rows.
+- Never fill empty space with generic prose.
+SELF-CHECK BEFORE JSON:
+1. Remove findings whose head is only a generic section label.
+2. Remove all copyright, footer, URL and page-number text.
+3. Confirm every number is present in the source.
+4. Confirm every substantive major section is represented or deliberately combined.
+5. Confirm recommendations/actions are source-supported.
+Reply with only JSON:
+{"deck_title":"...","subtitle":"...","slides":[...],"annexure":{"tables":[{"title":"...","columns":["..."],"rows":[["..."]]}],"notes":["..."]}}`async function generateDeck(){
   const docs=readyDocs();
   if(!docs.length){toast(m("noDocs"));return}
   if(busy.ppt)return; busy.ppt=true;
@@ -685,9 +729,9 @@ async function generateDeck(){
   try{
     if(sample){
       let material; const total=totalChars();
-      if(total<=52000){material=docs.map(d=>docBlock(d,52000)).join("\n\n")}
+      if(total<=52000){material=docs.map(d=>presentationBlock(d,52000)).join("\n\n")}
       else{
-        const chunks=chunkDocs(42000); const parts=[];
+        const chunks=readyDocs().flatMap(d=>{const t=cleanPresentationText(d.text);const out=[];for(let i=0;i<t.length;i+=42000)out.push(`### Document: ${d.name}\n${t.slice(i,i+42000)}`);return out;}); const parts=[];
         for(let i=0;i<chunks.length;i++){
           setMsg(`Reading part ${i+1} of ${chunks.length} of the source documents…`);
           const r=await sample.json(`From this part of the source documents, extract everything needed to build presentation slides: section names, key findings with figures, tables of comparable numbers (as rows), decisions, risks, and actions with owners and dates. Reply with only JSON: {"sections":[{"name":"...","facts":["..."]}],"tables":[{"title":"...","columns":["..."],"rows":[["..."]]}],"actions":[{"action":"...","owner":"...","due":"..."}]}\n\n${chunks[i]}`);
@@ -718,7 +762,14 @@ function normaliseDeck(r){
     else{o.type="bullets";o.intro=String(s.intro||"");o.bullets=A(s.bullets).map(String).slice(0,8)}
     return o}).filter(Boolean);
   const an=r.annexure||{};
-  return {deck_title:String(r.deck_title||(S.result?S.result.summary.title:"Presentation")),subtitle:String(r.subtitle||""),slides,annexure:{tables:A(an.tables).slice(0,2).map(t=>({title:String(t.title||""),columns:A(t.columns).map(String).slice(0,5),rows:A(t.rows).map(r=>A(r).map(String).slice(0,5)).slice(0,10)})),notes:A(an.notes).map(String).slice(0,6)}};
+  const badHead=/^(?:table of contents|contents|toc|copyright|all rights reserved)$/i;
+  const badText=/(copyright\s*©|all rights reserved|www\.nitiforstates\.gov\.in|https?:\/\/)/i;
+  const cleanedSlides=slides.map(s=>{
+    if(s.type==="findings"||s.type==="recommendations")s.items=s.items.filter(i=>!badHead.test(i.head.trim())&&!badText.test(i.text));
+    if(badHead.test(s.title.trim()))return null;
+    return s;
+  }).filter(Boolean).filter(s=>s.type!=="findings"||s.items.length);
+  return {deck_title:String(r.deck_title||(S.result?S.result.summary.title:"Presentation")),subtitle:String(r.subtitle||""),slides:cleanedSlides,annexure:{tables:A(an.tables).slice(0,2).map(t=>({title:String(t.title||""),columns:A(t.columns).map(String).slice(0,5),rows:A(t.rows).map(r=>A(r).map(String).slice(0,5)).slice(0,10)})),notes:A(an.notes).map(String).slice(0,6)}};
 }
 function basicDeck(s){
   const slides=[];
