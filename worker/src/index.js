@@ -498,9 +498,14 @@ async function handleAsk(request, env, headers) {
   const prompt = String(body.prompt || "").trim();
   const context = String(body.context || "").trim();
 
-  const model = String(
+  const requestedModel = String(
     body.model || "gpt-5.6-luna"
   );
+  const modelMap = {
+    "gemini-3.8-flash": "gpt-5.6-luna",
+    "analysis-service": "gpt-5.6-luna"
+  };
+  const model = modelMap[requestedModel] || requestedModel;
 
   const thinkingLevel = [
     "low",
