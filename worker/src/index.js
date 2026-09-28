@@ -482,7 +482,7 @@ async function handleAsk(request, env, headers) {
   // endpoints for the later access-control rollout.
   const session = await getSession(request, env);
 
-  if (!env.OPENAI_API_KEY) {
+  if (!env.GEMINI_API_KEY) {
     return json(
       {
         error:
@@ -498,14 +498,9 @@ async function handleAsk(request, env, headers) {
   const prompt = String(body.prompt || "").trim();
   const context = String(body.context || "").trim();
 
-  const requestedModel = String(
-    body.model || "gpt-5.6-luna"
+  const model = String(
+    body.model || "gemini-3.8-flash"
   );
-  const modelMap = {
-    "gemini-3.8-flash": "gpt-5.6-luna",
-    "analysis-service": "gpt-5.6-luna"
-  };
-  const model = modelMap[requestedModel] || requestedModel;
 
   const thinkingLevel = [
     "low",
@@ -534,42 +529,40 @@ async function handleAsk(request, env, headers) {
     ? `DOCUMENT CONTEXT:\n${context}\n\nUSER REQUEST:\n${prompt}`
     : prompt;
 
-  const endpoint = "https://api.openai.com/v1/responses";
+  const endpoint =
+    "https://generativelanguage.googleapis.com/v1beta/interactions";
 
-  const openaiResponse = await fetch(endpoint, {
+  const geminiResponse = await fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${env.OPENAI_API_KEY}`
+      "x-goog-api-key": env.GEMINI_API_KEY
     },
     body: JSON.stringify({
       model,
-      instructions: systemInstruction,
       input,
-      reasoning: {
-        effort: thinkingLevel
+      system_instruction: systemInstruction,
+      generation_config: {
+        thinking_level: thinkingLevel
       }
     })
   });
 
-  const data = await openaiResponse.json().catch(() => ({}));
+  const data = await geminiResponse.json().catch(() => ({}));
 
-  if (!openaiResponse.ok) {
+  if (!geminiResponse.ok) {
     return json(
       {
         error:
           data?.error?.message ||
           "AI request failed."
       },
-      openaiResponse.status,
+      geminiResponse.status,
       headers
     );
   }
 
-  const answer =
-    typeof data?.output_text === "string"
-      ? data.output_text.trim()
-      : textFromInteraction(data);
+  const answer = textFromInteraction(data);
 
   if (!answer) {
     return json(
