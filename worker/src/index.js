@@ -1,3 +1,5 @@
+import { buildEvidence, verifyEvidence } from "./intelligence.js";
+
 const SESSION_COOKIE = "niti_session";
 const SESSION_DAYS = 7;
 
@@ -544,12 +546,26 @@ async function handleAsk(request, env, headers) {
     "5. Do not present an inference as if it were stated by the document.",
     "6. If the requested information is absent, say: The document does not provide sufficient evidence to determine this.",
     "",
+    "SOURCE CITATION RULES",
+    "1. When document evidence is supplied, every substantive factual answer must cite one or more relevant [SOURCE CHUNK n] markers.",
+    "2. Cite only source chunks that directly support the statement.",
+    "3. Never cite a chunk merely because it contains related terminology.",
+    "4. Do not invent source chunk numbers.",
+    "",
     "PRESENTATION RULES",
     "When asked to create or analyse presentation content, prioritise substantive findings, evidence-rich sections, verified figures, and explicit recommendations. Never use document headings, table-of-contents entries, or footer text as findings."
   ].join("\n");
 
-  const input = context
-    ? `DOCUMENT CONTEXT:\n${context}\n\nUSER REQUEST:\n${prompt}`
+  const evidence = context
+    ? buildEvidence(context, prompt, 8)
+    : {
+        chunks: [],
+        selected: [],
+        text: ""
+      };
+
+  const input = evidence.text
+    ? `DOCUMENT EVIDENCE:\n${evidence.text}\n\nUSER REQUEST:\n${prompt}`
     : prompt;
 
   const endpoint =
@@ -611,12 +627,42 @@ async function handleAsk(request, env, headers) {
     );
   }
 
+  const evidenceCheck = verifyEvidence(answer, evidence.selected);
+
+  if (evidenceCheck.invalid_citations.length) {
+    return json(
+      {
+        error: "The intelligence service returned an invalid evidence citation.",
+        evidence: evidenceCheck
+      },
+      502,
+      headers
+    );
+  }
+
+  if (evidenceCheck.required && !evidenceCheck.grounded) {
+    return json(
+      {
+        error: "The intelligence service returned an answer without sufficient source grounding.",
+        evidence: evidenceCheck
+      },
+      502,
+      headers
+    );
+  }
+
   return json(
     {
       answer,
       model: data?.model || model,
       usage: data?.usage || null,
-      interaction_id: data?.id || null
+      interaction_id: data?.id || null,
+      evidence: {
+        chunks_available: evidence.chunks.length,
+        chunks_selected: evidence.selected.map(chunk => chunk.id),
+        cited_chunk_ids: evidenceCheck.cited_chunk_ids,
+        grounded: evidenceCheck.grounded
+      }
     },
     200,
     headers
@@ -724,4 +770,4 @@ export default {
   }
 };
 
-// intelligence pipeline baseline
+// intelligence pipeline: cleaning, chunking, retrieval and citation validation
