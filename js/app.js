@@ -772,11 +772,15 @@ function normaliseDeck(r){
   return {deck_title:String(r.deck_title||(S.result?S.result.summary.title:"Presentation")),subtitle:String(r.subtitle||""),slides:cleanedSlides,annexure:{tables:A(an.tables).slice(0,2).map(t=>({title:String(t.title||""),columns:A(t.columns).map(String).slice(0,5),rows:A(t.rows).map(r=>A(r).map(String).slice(0,5)).slice(0,10)})),notes:A(an.notes).map(String).slice(0,6)}};
 }
 function basicDeck(s){
+  const bad=/^(?:overview|contents|table of contents|introduction|index|copyright|solution)$/i;
+  const sections=(s.sections||[]).filter(x=>!bad.test(String(x.heading||"").trim())&&((x.narrative||"").length>40||(x.points||[]).length));
   const slides=[];
-  slides.push({type:"findings",title:"Key Findings",items:s.sections.slice(0,6).map(x=>({head:x.heading,text:x.points[0]||""}))});
-  if(s.key_numbers.length)slides.push({type:"stats",title:"Key Figures",stats:s.key_numbers.slice(0,6),note:""});
-  slides.push({type:"recommendations",title:"Recommendations",items:s.action_items.slice(0,4).map(a=>({head:"Prioritise: "+a.action.split(/\s+/).slice(0,5).join(" ").replace(/[,.;:]$/,""),text:a.action}))});
-  slides.push({type:"next_steps",title:"Next Steps",steps:s.action_items.slice(0,7).map(a=>({action:a.action,owner:a.owner,timeline:a.due}))});
+  const findings=sections.slice(0,6).map(x=>({head:clip(x.heading,55),text:clip(x.narrative||x.points?.[0]||"",180)})).filter(x=>x.text);
+  if(findings.length)slides.push({type:"findings",title:"Key Findings",items:findings});
+  if(s.key_numbers?.length)slides.push({type:"stats",title:"Key Figures",stats:s.key_numbers.slice(0,6),note:""});
+  const actions=(s.action_items||[]).filter(a=>a.action&&!/copyright|all rights reserved|nitiforstates\.gov/i.test(a.action));
+  if(actions.length)slides.push({type:"recommendations",title:"Document Actions",items:actions.slice(0,4).map(a=>({head:clip(a.action,55),text:clip(a.action,180)}))});
+  if(actions.length)slides.push({type:"next_steps",title:"Next Steps",steps:actions.slice(0,7).map(a=>({action:a.action,owner:a.owner,timeline:a.due}))});
   return {deck_title:s.title,subtitle:s.doc_type,slides:slides.filter(x=>(x.items||x.stats||x.steps||[]).length),annexure:{tables:[],notes:[]}};
 }
 function fullDeckList(){
