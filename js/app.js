@@ -716,7 +716,9 @@ SELF-CHECK BEFORE JSON:
 4. Confirm every substantive major section is represented or deliberately combined.
 5. Confirm recommendations/actions are source-supported.
 Reply with only JSON:
-{"deck_title":"...","subtitle":"...","slides":[...],"annexure":{"tables":[{"title":"...","columns":["..."],"rows":[["..."]]}],"notes":["..."]}}`async function generateDeck(){
+{"deck_title":"...","subtitle":"...","slides":[...],"annexure":{"tables":[{"title":"...","columns":["..."],"rows":[["..."]]}],"notes":["..."]}}`;
+
+async function generateDeck(){
   const docs=readyDocs();
   if(!docs.length){toast(m("noDocs"));return}
   if(busy.ppt)return; busy.ppt=true;
