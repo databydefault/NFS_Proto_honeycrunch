@@ -190,10 +190,30 @@ async function extract(d){
   if(d.kind==="xlsx"||d.kind==="csv") return extractSheet(d,buf);
   d.text=new TextDecoder().decode(buf); d.pages=Math.max(1,Math.ceil(wordCount(d.text)/450));
 }
+function cleanPdfLines(lines, repeatCounts){
+  return lines
+    .map(line=>String(line||"").replace(/[\\u0000-\\u0008\\u000B\\u000C\\u000E-\\u001F]/g," ").replace(/[ \\t]+/g," ").trim())
+    .filter(Boolean)
+    .filter(line=>{
+      const low=line.toLowerCase();
+      if(/^https?:\\/\\//i.test(line)||/^www\\./i.test(line)) return false;
+      if(/^copyright\\b/i.test(line)||/^all rights reserved\\b/i.test(line)) return false;
+      if(/^page\\s+\\d+(?:\\s+of\\s+\\d+)?$/i.test(line)||/^\\d+\\s+of\\s+\\d+$/i.test(line)) return false;
+      if(/^\\d+$/.test(line)) return false;
+      if(/^(svg|image|figure|fig\\.?|extract again)$/i.test(line)) return false;
+      if(/^(table of contents|contents|index)$/i.test(line)) return false;
+      if(/(?:\\.{3,}|…{2,})\\s*\\d+\\s*$/.test(line)) return false;
+      if(/^(next|previous|home|back|menu|navigation)$/i.test(line)) return false;
+      if((repeatCounts.get(low)||0)>=4 && line.length<=140) return false;
+      return true;
+    });
+}
+
 async function extractPdf(d,buf){
   if(!window.pdfjsLib) throw new Error("PDF reader did not load");
   const pdf=await pdfjsLib.getDocument({data:new Uint8Array(buf),isEvalSupported:false}).promise;
-  d.pages=pdf.numPages; d.pdf=pdf; const parts=[];
+  d.pages=pdf.numPages; d.pdf=pdf; const parts=[]; const allPageLines=[]; const repeatCounts=new Map();
+
   for(let i=1;i<=pdf.numPages;i++){
     const page=await pdf.getPage(i); const tc=await page.getTextContent();
     const items=tc.items.filter(it=>"str" in it&&it.str.trim()!=="").map(it=>({s:it.str.replace(/​/g,""),x:it.transform[4],y:it.transform[5],w:it.width||0,h:Math.abs(it.transform[3])||10}));
@@ -203,13 +223,21 @@ async function extractPdf(d,buf){
     rows.sort((a,b)=>b.y-a.y);
     const lines=rows.map(r=>{r.items.sort((a,b)=>a.x-b.x);let out="",end=null;
       for(const it of r.items){if(end!==null){const gap=it.x-end;out+=gap>Math.max(14,it.h*1.6)?" | ":(gap>it.h*.18&&!out.endsWith(" ")&&!it.s.startsWith(" ")?" ":"")}out+=it.s;end=it.x+it.w}
-      return out.replace(/\s+/g," ").trim()});
-    const txt=lines.filter(Boolean).join("\n");
+      return out.replace(/\s+/g," ").trim()}).filter(Boolean);
+    allPageLines.push({p:i,lines});
+    for(const line of lines){
+      const key=line.toLowerCase().replace(/\s+/g," ").trim();
+      repeatCounts.set(key,(repeatCounts.get(key)||0)+1);
+    }
+    const visible=cleanPdfLines(lines,repeatCounts);
+    const txt=visible.join("\n");
     if(txt.replace(/\s/g,"").length<30) d.scanned.push(i);
     parts.push({p:i,t:`[Page ${i}]\n`+txt});
   }
+
   d.pageTexts=parts;
-  d.text=parts.map(x=>x.t).join("\n\n");
+  d.text=parts.map(x=>x.t).join("\n\n").replace(/\\n{3,}/g,"\\n\\n").trim();
+  d.pdfCleaned=true;
 }
 async function extractDocx(d,buf){
   if(!window.mammoth) throw new Error("Word reader did not load");
@@ -961,7 +989,7 @@ function renderData(){
   if(textDocs.length){
     const F=S.fig;
     html+=`<div class="eyeline"><h3>Figures found in ${textDocs.length===1?esc(textDocs[0].name):textDocs.length+" documents"}</h3>${sample&&F&&!F.busy?`<button class="btn btn-ghost btn-sm" id="figRefresh">Extract again</button>`:""}</div>`;
-    if(!sample){html+=notice("Charts from PDF and Word files need the analysis service, which is not available in this view. Upload an Excel or CSV file to chart data directly.")}
+    if(!sample){html+=notice("AI analysis is unavailable. The portal has extracted document text locally, but chart/figure interpretation is disabled until the analysis service is available.","warn")}
     else if(!F||F.busy||F.key!==docKey()){html+=`<div class="card empty"><span class="spin" style="width:26px;height:26px;color:var(--brand)"></span><b>Finding tables and figures in the documents…</b><span>This takes about half a minute.</span></div>`}
     else if(F.error){html+=notice(F.error,"warn")}
     else{
