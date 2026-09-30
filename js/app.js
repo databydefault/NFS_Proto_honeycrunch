@@ -192,19 +192,22 @@ async function extract(d){
 }
 function cleanPdfLines(lines, repeatCounts){
   return lines
-    .map(line=>String(line||"").replace(/[\\u0000-\\u0008\\u000B\\u000C\\u000E-\\u001F]/g," ").replace(/[ \\t]+/g," ").trim())
+    .map(line => String(line || "")
+      .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, " ")
+      .replace(/[ \t]+/g, " ")
+      .trim())
     .filter(Boolean)
-    .filter(line=>{
-      const low=line.toLowerCase();
-      if(/^https?:\\/\\//i.test(line)||/^www\\./i.test(line)) return false;
-      if(/^copyright\\b/i.test(line)||/^all rights reserved\\b/i.test(line)) return false;
-      if(/^page\\s+\\d+(?:\\s+of\\s+\\d+)?$/i.test(line)||/^\\d+\\s+of\\s+\\d+$/i.test(line)) return false;
-      if(/^\\d+$/.test(line)) return false;
-      if(/^(svg|image|figure|fig\\.?|extract again)$/i.test(line)) return false;
-      if(/^(table of contents|contents|index)$/i.test(line)) return false;
-      if(/(?:\\.{3,}|…{2,})\\s*\\d+\\s*$/.test(line)) return false;
-      if(/^(next|previous|home|back|menu|navigation)$/i.test(line)) return false;
-      if((repeatCounts.get(low)||0)>=4 && line.length<=140) return false;
+    .filter(line => {
+      const low = line.toLowerCase();
+      if (line.startsWith("http://") || line.startsWith("https://") || /^www\./i.test(line)) return false;
+      if (/^copyright\b/i.test(line) || /^all rights reserved\b/i.test(line)) return false;
+      if (/^page\s+\d+(?:\s+of\s+\d+)?$/i.test(line) || /^\d+\s+of\s+\d+$/i.test(line)) return false;
+      if (/^\d+$/.test(line)) return false;
+      if (/^(svg|image|figure|fig\.?|extract again)$/i.test(line)) return false;
+      if (/^(table of contents|contents|index)$/i.test(line)) return false;
+      if (/(?:\.{3,}|…{2,})\s*\d+\s*$/.test(line)) return false;
+      if (/^(next|previous|home|back|menu|navigation)$/i.test(line)) return false;
+      if ((repeatCounts.get(low) || 0) >= 4 && line.length <= 140) return false;
       return true;
     });
 }
