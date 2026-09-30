@@ -116,7 +116,18 @@ geminiCall.json=async function(input, options={}){
 };
 
 async function initCaps(){
-  AI.framed=true; AI.perm="available"; AI.lastErr=""; sample=geminiCall; downloads=true; imgLimits=null;
+  AI.framed=true; AI.perm="checking"; AI.lastErr=""; sample=null; downloads=true; imgLimits=null;
+  try{
+    const base=(window.NITI_CONFIG?.WORKER_URL||"").replace(/\/$/,"");
+    if(!base) throw new Error("Analysis service URL is not configured.");
+    const r=await fetch(base+"/health",{method:"GET",cache:"no-store"});
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok || data.analysis!=="available") throw new Error(data.error||"Analysis service is not configured.");
+    sample=geminiCall; AI.perm="available";
+  }catch(e){
+    AI.perm="unavailable";
+    AI.lastErr=e?.message||"Analysis service is unavailable.";
+  }
   AI.checkedAt=new Date(); aiChecked=true; renderAiChip(); renderAiPanel(); renderAll();
 }
 let aiChecked=false;
@@ -444,8 +455,13 @@ async function generateSummary(force){
       }catch(e){summary=draft}
       if(summary&&!summary.doc_date&&outlines[0]&&outlines[0].doc_date)summary.doc_date=String(outlines[0].doc_date);
     }
-  }catch(e){ console.warn(e); $("#sumStale").innerHTML=notice(aiErr(e),"warn"); summary=null; }
-  if(!summary){ summary=basicSummary(docs,big); mode="basic"; if(!sample) $("#sumStale").innerHTML=notice(m("basic")); }
+  }catch(e){ console.warn(e); AI.lastErr=e?.message||"Analysis service is unavailable."; sample=null; $("#sumStale").innerHTML=notice(aiErr(e),"warn"); summary=null; mode="unavailable"; }
+  if(!summary){
+    busy.sum=false;
+    renderTray(); renderAll();
+    if(mode==="unavailable") return;
+    summary=basicSummary(docs,big); mode="basic"; if(!sample) $("#sumStale").innerHTML=notice(m("basic"));
+  }
   summary.coverage=outlineHeads; summary.review=review;
   S.result={summary,mode,big,files:docs.map(d=>({name:d.name,kind:d.kind,pages:d.pages})),at:new Date().toISOString()};
   S.deck=null; S.stale=false; S.isSample=false; busy.sum=false;
