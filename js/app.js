@@ -235,8 +235,14 @@ async function extractPdf(d,buf){
     parts.push({p:i,t:`[Page ${i}]\n`+txt});
   }
 
+  // Re-run the cleanup after all pages are scanned so repeated headers/footers
+  // are removed consistently even when their first occurrence was on page 1.
+  for(const part of parts){
+    const raw=part.t.replace(/^\[Page \d+\]\n?/,"").split("\n");
+    part.t=`[Page ${part.p}]\n`+cleanPdfLines(raw,repeatCounts).join("\n");
+  }
   d.pageTexts=parts;
-  d.text=parts.map(x=>x.t).join("\n\n").replace(/\\n{3,}/g,"\\n\\n").trim();
+  d.text=parts.map(x=>x.t).join("\n\n").replace(/\n{3,}/g,"\n\n").trim();
   d.pdfCleaned=true;
 }
 async function extractDocx(d,buf){
